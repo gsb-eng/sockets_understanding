@@ -22,6 +22,6 @@ while 1:
         conn.send(data)
         break
     print "received data:", data
-    conn.send(data)  # echo
+    conn.send(str(data) + '--' + '(This is a server reply)')  # echo
 
 conn.close()
