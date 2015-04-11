@@ -1,9 +1,10 @@
+import datetime
 import socket
 import threading
 
 
 host = ''
-port = 2626
+port = 2628
 connectionSevered = 0
 
 
@@ -16,9 +17,10 @@ class client(threading.Thread):
 
     def run(self):
         while True:
-            self.data = self.data + self.conn.recv(1024)
+            self.data += self.conn.recv(1024)
             if self.data.endswith(u"\n"):
-                print self.data
+                print str(datetime.datetime.now()) + ':' + \
+                    str(self.data).replace("\n", "")
                 self.data = ""
 
     def send_msg(self, msg):
@@ -29,11 +31,13 @@ class client(threading.Thread):
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((host, port))
     s.listen(5)
-except socket.error:
+except socket.error, e:
     import sys
     print 'Failed to create socket'
+    print str(e)
     sys.exit()
 
 print '[+] Listening for connections on port: {0}'.format(port)
@@ -41,9 +45,10 @@ print '[+] Listening for connections on port: {0}'.format(port)
 
 conn, address = s.accept()
 c = client(conn)
+c.daemon = True
 c.start()
 print '[+] Client connected: {0}'.format(address[0])
-c.send_msg(u"How are you?")
+c.send_msg(u"How are you? \n")
 print "connectionSevered:{0}".format(connectionSevered)
 while (connectionSevered == 0):
     try:
