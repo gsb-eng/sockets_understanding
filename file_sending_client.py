@@ -6,14 +6,13 @@ import os
 serverIP = '127.0.0.1'
 serverPort = 12000
 clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverIP,serverPort))
+clientSocket.connect((serverIP, serverPort))
 path = raw_input('Input Path:')
 
 
 if os.path.exists(path):
     clientSocket.send(bytes(path))
     path_resp = clientSocket.recv(1024)
-
 
     if os.path.isfile(path):
         file = open(path, "rb")
@@ -23,7 +22,6 @@ if os.path.exists(path):
             data = file.read(1024)
         file.close()
 
-
     else:
         file_list = []
         for root, dirnames, filenames in os.walk(path):
@@ -32,7 +30,7 @@ if os.path.exists(path):
         print file_list
         file_list = iter(file_list)
         while True:
-            file_transfer_done = False
+
             try:
                 file_name = file_list.next()
             except StopIteration, e:
