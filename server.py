@@ -29,6 +29,26 @@ class client(threading.Thread):
     def close(self):
         self.conn.close()
 
+
+class ConAccept(threading.Thread):
+    clients = {}
+
+    def __init__(self, con):
+        super(ConAccept, self.__init__())
+        self.con = con
+
+    def run(self):
+        while True:
+            client, address = self.con.accept()
+            if client:
+                self.clients[client] = client
+                print self.clients
+
+    def start_client(self, con):
+        c = client(con)
+        c.daemon = True
+        c.start()
+
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -40,9 +60,7 @@ except socket.error, e:
     print str(e)
     sys.exit()
 
-print '[+] Listening for connections on port: {0}'.format(port)
-
-
+con_thread = ConAccept(s)
 conn, address = s.accept()
 c = client(conn)
 c.daemon = True
