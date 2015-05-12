@@ -3,7 +3,7 @@ import socket
 import threading
 
 
-host = ''
+host = '127.0.0.1'
 port = 2628
 connectionSevered = 0
 
@@ -34,7 +34,7 @@ class ConAccept(threading.Thread):
     clients = {}
 
     def __init__(self, con):
-        super(ConAccept, self.__init__())
+        super(ConAccept, self).__init__()
         self.con = con
 
     def run(self):

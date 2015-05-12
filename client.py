@@ -3,8 +3,8 @@ import socket
 import threading
 
 
-TCP_IP = '127.0.0.1'
-TCP_PORT = 2628
+TCP_IP = '23.229.145.162'
+TCP_PORT = 3306
 BUFFER_SIZE = 1024
 MESSAGE = "Hello, World!"
 
@@ -21,7 +21,7 @@ class client(threading.Thread):
     def run(self):
         while True:
             self.data += self.con.recv(1024)
-            if self.data.endswith(u"\n"):
+            if self.data.endswith("\n"):
                 print str(datetime.datetime.now()) + ':' + \
                     str(self.data).replace("\n", "")
                 self.data = ""
@@ -38,7 +38,7 @@ c.start()
 
 while True:
     try:
-        message = raw_input() + u"\n"
+        message = raw_input()
         c.send_msg(message)
     except:
         c.con_close()
